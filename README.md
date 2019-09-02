@@ -75,17 +75,17 @@ Run script for initial setup and follow instructions
 ```
 
 ## FAQ
-**Q:** Can i use this script on Docker?
-**A:** For now no, it depends on `jq` not available on Docker container, maybe in a future release.
+**Q:** Can i use this script on Docker?  
+**A:** For now only works with containers with `jq` installed like [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli).
 
-**Q:** What's the difference of this script and the plugin or other Trakt.tv scrobbler?
+**Q:** What's the difference of this script and the plugin or other Trakt.tv scrobbler?  
 **A:** The plugin **[Plex-Trakt-Scrobbler](https://github.com/trakt/Plex-Trakt-Scrobbler)** is unmaintained and no longer works on ARM, and soon can stop working on all systems.  
 [**Plaxt**](https://plaxt.astandke.com/) (and similar) requires webhooks, only available to Plex Pass users.
 
-**Q:** **tautulli2trakt** is no longer scrobbling/updating my media, how can i check if it's working?
+**Q:** **tautulli2trakt** is no longer scrobbling/updating my media, how can i check if it's working?  
 **A:** Make sure `tautulli2trakt.data` (located on script path) is writable by Tautulli. If Tautulli is running with it's own user change the file owner `chmod <tautulli username> tautulli2trakt.data`.
 
-**Q:** How can i check any log messages?
+**Q:** How can i check any log messages?  
 **A:** On Tautulli: View Logs > Notification Logs
 
 ### Similar Projects 
