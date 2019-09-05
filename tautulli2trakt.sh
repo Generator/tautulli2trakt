@@ -2,6 +2,7 @@
 #
 
 #    Description: Companion script for Tautulli <https://tautulli.com/> to automatically scrobble media to Trakt.tv.
+#    Contributors: nemchik 
 #
 #    Copyright (C) 2019 American_Jesus <american.jesus.pt _AT_ gmail _DOT_ com>
 #
@@ -20,26 +21,18 @@
 #  
 
 ## App info
-APP_VER=1.0
+APP_VER=1.1
 APP_DATE=$(date +%F)
 
 ## Script path and name
 SCRIPTNAME=$(basename -s .sh "$0")
 SCRIPTPATH=$( cd "$(dirname '${BASH_SOURCE[0]}')" ; pwd -P )
 
-## Check if jq is installed and on $PATH
-if ! command -v jq >/dev/null 2>&1 ; then
-	echo "Error - 'jq' not found." 1>&2
-	exit 1
-fi
-
 if [ -f "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
    TRAKT_TOKEN=$(sed -n 1p "$SCRIPTPATH/$SCRIPTNAME.data")
    TRAKT_RTOKEN=$(sed -n 2p "$SCRIPTPATH/$SCRIPTNAME.data")
    expDATE=$(date --date=$(sed -n 3p "$SCRIPTPATH/$SCRIPTNAME.data") -d "+90 days" +%s)
 fi
-
-#echo -e "Script name: $SCRIPTNAME \nScript path: $SCRIPTPATH "
 
 ## Find file and source it
 if [ ! -f "$SCRIPTPATH/$SCRIPTNAME.conf" ]; then
@@ -50,10 +43,6 @@ if [ ! -f "$SCRIPTPATH/$SCRIPTNAME.conf" ]; then
 elif [ -f "$SCRIPTPATH/$SCRIPTNAME.conf" ]; then
    . "$SCRIPTPATH/$SCRIPTNAME.conf"
 fi
-
-#if [ -f "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
-#   . "$SCRIPTPATH/$SCRIPTNAME.data"
-#fi
 
 ######################
 ## Aplication Setup ##
@@ -89,13 +78,13 @@ scriptSetup() {
         \"client_id\": \"$TRAKT_APPID\" \
       }" \
       'https://api.trakt.tv/oauth/device/code' > "/tmp/$SCRIPTNAME.tmp"
-      echo DEVICE_CODE=$(jq '.device_code' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
+      echo DEVICE_CODE=$(grep -Po '"device_code": "\K.*?(?=")' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
       . "$SCRIPTPATH/$SCRIPTNAME.data"
     fi
     
     # Autorize APP
     if [ -f "/tmp/$SCRIPTNAME.tmp" ]; then
-       USER_CODE=$(jq '.user_code' /tmp/$SCRIPTNAME.tmp)
+       USER_CODE=$(grep -Po '"user_code": "\K.*?(?=")' /tmp/$SCRIPTNAME.tmp)
        printf "Autorize the aplication.\nOpen https://trakt.tv/activate and enter the code $USER_CODE \n"
        read -p "Press enter to continue"
     fi
@@ -110,7 +99,7 @@ scriptSetup() {
          \"client_id\": \"$TRAKT_APPID\",
          \"client_secret\": \"$TRAKT_APPSECRET\"
     }" \
-    'https://api.trakt.tv/oauth/device/token' | jq '.access_token, .refresh_token, .created_at' | sed 's/\"//g' > "$SCRIPTPATH/$SCRIPTNAME.data"
+    'https://api.trakt.tv/oauth/device/token' | grep -Po '"(access_token|refresh_token)": "\K.*?(?=")|"created_at": \K\d+' > "$SCRIPTPATH/$SCRIPTNAME.data"
     #fi
 }
 
@@ -129,7 +118,7 @@ refreshToken() {
         \"redirect_uri\": \"urn:ietf:wg:oauth:2.0:oob\",
         \"grant_type\": \"refresh_token\"
     }" \
-    'https://api.trakt.tv/oauth/token' | jq '.access_token, .refresh_token, .created_at' | sed 's/\"//g' > "$SCRIPTPATH/$SCRIPTNAME.data"
+    'https://api.trakt.tv/oauth/token' | grep -Po '"(access_token|refresh_token)": "\K.*?(?=")|"created_at": \K\d+' > "$SCRIPTPATH/$SCRIPTNAME.data"
     #. "$SCRIPTPATH/$SCRIPTNAME.data"
 }
 
