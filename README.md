@@ -3,7 +3,7 @@
 Companion script for Tautulli to automatically scrobble media to Trakt.tv.
 
 ## Dependencies
-\- **tautulli**
+\- **tautulli**  
 \- **jq**
 
 ## Install 
@@ -14,8 +14,8 @@ Companion script for Tautulli to automatically scrobble media to Trakt.tv.
 Create a new application https://trakt.tv/oauth/applications  
 Add the follow settings:
 
-**Name:** `tautulli2trakt`
-**Redirect uri:** `urn:ietf:wg:oauth:2.0:oob`
+**Name:** `tautulli2trakt`  
+**Redirect uri:** `urn:ietf:wg:oauth:2.0:oob`  
 **Permissions:** `/scrobble`
 
 
@@ -28,15 +28,15 @@ Run script for initial setup and follow instructions
 ## Tautulli
 
 ### Add Script
-- Settings > Notification Agents > Add a Notification Agent > Script
+- `Settings` > `Notification Agents` > `Add a Notification Agent` > `Script`
 
 ## Script Settings
 
 ### Configuration
 - **Script Folder**
-  - \<script path location\>
+  - `<script path location>`
 - **Script File**
-  - tautulli2trakt.sh
+  - `tautulli2trakt.sh`
 
 ### Triggers
 - Playback Start 
@@ -74,21 +74,14 @@ Run script for initial setup and follow instructions
 -h | --help         This help
 ```
 
-## FAQ
-**Q:** Can i use this script on Docker?  
-**A:** For now only works with containers with `jq` installed like [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli).
-
-**Q:** What's the difference of this script and the plugin or other Trakt.tv scrobbler?  
-**A:** The plugin **[Plex-Trakt-Scrobbler](https://github.com/trakt/Plex-Trakt-Scrobbler)** is unmaintained and no longer works on ARM, and soon can stop working on all systems.  
-[**Plaxt**](https://plaxt.astandke.com/) (and similar) requires webhooks, only available to Plex Pass users.
-
-**Q:** **tautulli2trakt** is no longer scrobbling/updating my media, how can i check if it's working?  
-**A:** Make sure `tautulli2trakt.data` (located on script path) is writable by Tautulli. If Tautulli is running with it's own user change the file owner `chmod <tautulli username> tautulli2trakt.data`.
-
-**Q:** How can i check any log messages?  
-**A:** On Tautulli: View Logs > Notification Logs
+## FAQ & Troubleshooting
+* [Frequently Asked Questions](https://github.com/Generator/tautulli2trakt/wiki/Frequently-Asked-Questions)  
+* [Troubleshooting](https://github.com/Generator/tautulli2trakt/wiki/Troubleshooting)
 
 ### Similar Projects 
 
 \- https://github.com/JvSomeren/tautulli-watched-sync   
-\- https://github.com/xanderstrike/goplaxt
+\- https://github.com/xanderstrike/goplaxt  
+\- https://github.com/gazpachoking/trex  
+\- https://github.com/dabiggm0e/plextrakt  
+\- https://github.com/trakt/Plex-Trakt-Scrobbler
