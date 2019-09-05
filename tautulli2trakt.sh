@@ -29,9 +29,10 @@ SCRIPTNAME=$(basename -s .sh "$0")
 SCRIPTPATH=$( cd "$(dirname '${BASH_SOURCE[0]}')" ; pwd -P )
 
 if [ -f "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
-   TRAKT_TOKEN=$(sed -n 1p "$SCRIPTPATH/$SCRIPTNAME.data")
-   TRAKT_RTOKEN=$(sed -n 2p "$SCRIPTPATH/$SCRIPTNAME.data")
-   expDATE=$(date --date=$(sed -n 3p "$SCRIPTPATH/$SCRIPTNAME.data") -d "+90 days" +%s)
+   TRAKT_TOKEN=$(grep -Po '"access_token": "\K.*?(?=")' device_token)
+   TRAKT_RTOKEN=$(grep -Po '"refresh_token": "\K.*?(?=")' device_token)
+   creatDATE=$(date -d @$(grep -Po '"created_at": \K\d+' device_token) -R) # Need to convert before calculate!
+   expDATE=$(date -d "$creatDATE +90 days" +%s)
 fi
 
 ## Find file and source it
@@ -90,7 +91,6 @@ scriptSetup() {
     fi
 
     # Get Aplication Token
-    #if [ -n "$DEVICE_CODE" ]; then
     curl --silent \
          --request POST \
          --header "Content-Type: application/json" \
@@ -99,8 +99,10 @@ scriptSetup() {
          \"client_id\": \"$TRAKT_APPID\",
          \"client_secret\": \"$TRAKT_APPSECRET\"
     }" \
-    'https://api.trakt.tv/oauth/device/token' | grep -Po '"(access_token|refresh_token)": "\K.*?(?=")|"created_at": \K\d+' > "$SCRIPTPATH/$SCRIPTNAME.data"
-    #fi
+    'https://api.trakt.tv/oauth/device/token' > "$SCRIPTPATH/$SCRIPTNAME.data"
+    
+    # Make data file writable by others
+    chmod 666 "$SCRIPTPATH/$SCRIPTNAME.data"
 }
 
 ###################
@@ -118,7 +120,7 @@ refreshToken() {
         \"redirect_uri\": \"urn:ietf:wg:oauth:2.0:oob\",
         \"grant_type\": \"refresh_token\"
     }" \
-    'https://api.trakt.tv/oauth/token' | grep -Po '"(access_token|refresh_token)": "\K.*?(?=")|"created_at": \K\d+' > "$SCRIPTPATH/$SCRIPTNAME.data"
+    'https://api.trakt.tv/oauth/token' > "$SCRIPTPATH/$SCRIPTNAME.data"
     #. "$SCRIPTPATH/$SCRIPTNAME.data"
 }
 
