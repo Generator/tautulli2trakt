@@ -29,16 +29,16 @@ SCRIPTNAME=$(basename -s .sh "$0")
 SCRIPTPATH=$( cd "$(dirname '${BASH_SOURCE[0]}')" ; pwd -P )
 
 if [ -f "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
-   TRAKT_TOKEN=$(grep -Po '"access_token": "\K.*?(?=")' device_token)
-   TRAKT_RTOKEN=$(grep -Po '"refresh_token": "\K.*?(?=")' device_token)
-   creatDATE=$(date -d @$(grep -Po '"created_at": \K\d+' device_token) -R) # Need to convert before calculate!
+   TRAKT_TOKEN=$(grep -Po '"access_token":"\K.*?(?=")' "$SCRIPTPATH/$SCRIPTNAME.data")
+   TRAKT_RTOKEN=$(grep -Po '"refresh_token":"\K.*?(?=")' "$SCRIPTPATH/$SCRIPTNAME.data")
+   creatDATE=$(date -d @$(grep -Po '"created_at":\K\d+' "$SCRIPTPATH/$SCRIPTNAME.data") -R) # Need to convert before calculate!
    expDATE=$(date -d "$creatDATE +90 days" +%s)
 fi
 
 ## Find file and source it
 if [ ! -f "$SCRIPTPATH/$SCRIPTNAME.conf" ]; then
    if [[ $1 != "--setup" ]]; then
-       echo "$SCRIPTNAME.conf doesn't exist, run $SCRIPTNAME.sh --setup first"
+       echo "$SCRIPTNAME.conf doesn't exist, run $SCRIPTNAME.sh --setup"
        exit 1
    fi
 elif [ -f "$SCRIPTPATH/$SCRIPTNAME.conf" ]; then
@@ -79,13 +79,13 @@ scriptSetup() {
         \"client_id\": \"$TRAKT_APPID\" \
       }" \
       'https://api.trakt.tv/oauth/device/code' > "/tmp/$SCRIPTNAME.tmp"
-      echo DEVICE_CODE=$(grep -Po '"device_code": "\K.*?(?=")' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
+      echo DEVICE_CODE=$(grep -Po '"device_code":"\K.*?(?=")' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
       . "$SCRIPTPATH/$SCRIPTNAME.data"
     fi
     
     # Autorize APP
     if [ -f "/tmp/$SCRIPTNAME.tmp" ]; then
-       USER_CODE=$(grep -Po '"user_code": "\K.*?(?=")' /tmp/$SCRIPTNAME.tmp)
+       USER_CODE=$(grep -Po '"user_code":"\K.*?(?=")' /tmp/$SCRIPTNAME.tmp)
        printf "Autorize the aplication.\nOpen https://trakt.tv/activate and enter the code $USER_CODE \n"
        read -p "Press enter to continue"
     fi
@@ -121,7 +121,6 @@ refreshToken() {
         \"grant_type\": \"refresh_token\"
     }" \
     'https://api.trakt.tv/oauth/token' > "$SCRIPTPATH/$SCRIPTNAME.data"
-    #. "$SCRIPTPATH/$SCRIPTNAME.data"
 }
 
 ######################
@@ -279,8 +278,14 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [ -n "$MEDIA" ] ; then
 
     if [ $expDATE -le $(date +%s) ]; then
-      refreshToken
-      eval $TRAKT_TOKEN
+      if [ -w "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
+        refreshToken
+        eval $TRAKT_TOKEN
+      else
+        echo "Error: Unable to write on $SCRIPTNAME.data"
+        exit 1
+      fi
+      
     fi
     
     if [[ $MEDIA == "movie" ]]; then
