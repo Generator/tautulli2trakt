@@ -2,9 +2,6 @@
 ## Description: 
 Companion script for Tautulli to automatically scrobble media to Trakt.tv.
 
-## Dependencies
-\- **tautulli**  
-\- **jq**
 
 ## Install 
     wget -O tautulli2trakt.sh https://raw.githubusercontent.com/Generator/tautulli2trakt/master/tautulli2trakt.sh
