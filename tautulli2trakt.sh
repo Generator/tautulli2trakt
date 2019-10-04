@@ -79,8 +79,8 @@ scriptSetup() {
         \"client_id\": \"$TRAKT_APPID\" \
       }" \
       'https://api.trakt.tv/oauth/device/code' > "/tmp/$SCRIPTNAME.tmp"
-      echo DEVICE_CODE=$(awk -v FS='(device_code\":\"|\",\"user_code)' '{print $2}' device_code /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
-      . "$SCRIPTPATH/$SCRIPTNAME.data"
+      DEVICE_CODE=$(awk -v FS='(device_code\":\"|\",\"user_code)' '{print $2}' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
+      source "$SCRIPTPATH/$SCRIPTNAME.data"
     fi
     
     # Autorize APP
@@ -103,6 +103,7 @@ scriptSetup() {
     
     # Make data file writable by others
     chmod 666 "$SCRIPTPATH/$SCRIPTNAME.data"
+    rm /tmp/$SCRIPTNAME.tmp
 }
 
 ###################
