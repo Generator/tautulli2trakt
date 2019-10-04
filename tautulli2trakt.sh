@@ -21,7 +21,7 @@
 #  
 
 ## App info
-APP_VER=1.1
+APP_VER=1.1.1
 APP_DATE=$(date +%F)
 
 ## Script path and name
@@ -29,9 +29,9 @@ SCRIPTNAME=$(basename -s .sh "$0")
 SCRIPTPATH=$( cd "$(dirname '${BASH_SOURCE[0]}')" ; pwd -P )
 
 if [ -f "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
-   TRAKT_TOKEN=$(grep -Po '"access_token":"\K.*?(?=")' "$SCRIPTPATH/$SCRIPTNAME.data")
-   TRAKT_RTOKEN=$(grep -Po '"refresh_token":"\K.*?(?=")' "$SCRIPTPATH/$SCRIPTNAME.data")
-   creatDATE=$(date -d @$(grep -Po '"created_at":\K\d+' "$SCRIPTPATH/$SCRIPTNAME.data") -R) # Need to convert before calculate!
+   TRAKT_TOKEN=$(awk -v FS='(access_token\":\"|\",\"token_type)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data")
+   TRAKT_RTOKEN=$(awk -v FS='(refresh_token\":\"|\",\"scope)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data")
+   creatDATE=$(date -d @$(awk -v FS='(created_at\":|}$)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data") -R) # Need to convert before calculate!
    expDATE=$(date -d "$creatDATE +90 days" +%s)
 fi
 
@@ -79,13 +79,13 @@ scriptSetup() {
         \"client_id\": \"$TRAKT_APPID\" \
       }" \
       'https://api.trakt.tv/oauth/device/code' > "/tmp/$SCRIPTNAME.tmp"
-      echo DEVICE_CODE=$(grep -Po '"device_code":"\K.*?(?=")' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
+      echo DEVICE_CODE=$(awk -v FS='(device_code\":\"|\",\"user_code)' '{print $2}' device_code /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
       . "$SCRIPTPATH/$SCRIPTNAME.data"
     fi
     
     # Autorize APP
     if [ -f "/tmp/$SCRIPTNAME.tmp" ]; then
-       USER_CODE=$(grep -Po '"user_code":"\K.*?(?=")' /tmp/$SCRIPTNAME.tmp)
+       USER_CODE=$(awk -v FS='(user_code\":\"|\",\"verification_url)' '{print $2}' /tmp/$SCRIPTNAME.tmp)
        printf "Autorize the aplication.\nOpen https://trakt.tv/activate and enter the code $USER_CODE \n"
        read -p "Press enter to continue"
     fi
