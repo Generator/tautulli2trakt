@@ -79,8 +79,8 @@ scriptSetup() {
         \"client_id\": \"$TRAKT_APPID\" \
       }" \
       'https://api.trakt.tv/oauth/device/code' > "/tmp/$SCRIPTNAME.tmp"
-      DEVICE_CODE=$(awk -v FS='(device_code\":\"|\",\"user_code)' '{print $2}' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
-      source "$SCRIPTPATH/$SCRIPTNAME.data"
+      echo DEVICE_CODE=$(awk -v FS='(device_code\":\"|\",\"user_code)' '{print $2}' /tmp/$SCRIPTNAME.tmp) > "$SCRIPTPATH/$SCRIPTNAME.data"
+      . "$SCRIPTPATH/$SCRIPTNAME.data"
     fi
     
     # Autorize APP
