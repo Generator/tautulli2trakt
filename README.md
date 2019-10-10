@@ -1,13 +1,36 @@
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/Generator/tautulli2trakt">
+    <img src="logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">Tautulli 2 Trakt</h3>
+
+</p>
+
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
+
+* [Description](#description)
+* [Installation](#installation)
+   * [Script Setup](#script-setup)
+   * [Tautulli](#tautulli)
+   * [Script Settings](#script-settings)
+* [Usage](#usage)
+* [License](#license)
+* [Similar Projects](#similar-projects)
 
 ## Description: 
 Companion script for Tautulli to automatically scrobble media to Trakt.tv.
 
+# Getting Started
 
-## Install 
+## Installation 
     wget -O tautulli2trakt.sh https://raw.githubusercontent.com/Generator/tautulli2trakt/master/tautulli2trakt.sh
     chmod +x tautulli2trakt.sh
 
-## Script Setup
+### Script Setup
 Create a new application https://trakt.tv/oauth/applications  
 Add the follow settings:
 
@@ -22,27 +45,27 @@ Run script for initial setup and follow instructions
 `tautulli2trakt.sh --setup`
 
 
-## Tautulli
+### Tautulli
 
-### Add Script
+#### Add Script
 - `Settings` > `Notification Agents` > `Add a Notification Agent` > `Script`
 
-## Script Settings
+### Script Settings
 
-### Configuration
+#### Configuration
 - **Script Folder**
   - `<script path location>`
 - **Script File**
   - `tautulli2trakt.sh`
 
-### Triggers
+#### Triggers
 - Playback Start 
 - Playback Stop
 - Playback Pause
 - Playback Resume
 - Watched 
 
-### Arguments
+#### Arguments
 - Playback Start / Playback Resume :  
 `-m {media_type} -s "{show_name}" -M "{title}" -y "{year}" -t "{thetvdb_id}" -i "{imdb_id}" -S {season_num} -E {episode_num} -P {progress_percent} -a start`  
 
@@ -75,10 +98,13 @@ Run script for initial setup and follow instructions
 * [Frequently Asked Questions](https://github.com/Generator/tautulli2trakt/wiki/Frequently-Asked-Questions)  
 * [Troubleshooting](https://github.com/Generator/tautulli2trakt/wiki/Troubleshooting)
 
-### Similar Projects 
+## License
+Distributed under the GPL License.
 
-\- https://github.com/JvSomeren/tautulli-watched-sync   
-\- https://github.com/xanderstrike/goplaxt  
-\- https://github.com/gazpachoking/trex  
-\- https://github.com/dabiggm0e/plextrakt  
-\- https://github.com/trakt/Plex-Trakt-Scrobbler
+## Similar Projects 
+
+- https://github.com/JvSomeren/tautulli-watched-sync   
+- https://github.com/xanderstrike/goplaxt  
+- https://github.com/gazpachoking/trex  
+- https://github.com/dabiggm0e/plextrakt  
+- https://github.com/trakt/Plex-Trakt-Scrobbler
