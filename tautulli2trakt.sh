@@ -277,7 +277,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ -n "$MEDIA" ] ; then
 
-    if [ $expDATE -le $(date +%s) ]; then
+    if [[ "$expDATE" -le $(date +%s) ]]; then
       if [ -w "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
         refreshToken
         eval $TRAKT_TOKEN
