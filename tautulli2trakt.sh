@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 
 #    Description: Companion script for Tautulli <https://tautulli.com/> to automatically scrobble media to Trakt.tv.
