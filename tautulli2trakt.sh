@@ -21,7 +21,7 @@
 #  
 
 ## App info
-APP_VER=1.1.1
+APP_VER=1.1.2
 APP_DATE=$(date +%F)
 
 ## Script path and name
