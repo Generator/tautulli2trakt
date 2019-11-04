@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 
 #    Description: Companion script for Tautulli <https://tautulli.com/> to automatically scrobble media to Trakt.tv.
@@ -21,18 +21,21 @@
 #  
 
 ## App info
-APP_VER=1.1.1
+APP_VER=1.1.2
 APP_DATE=$(date +%F)
 
 ## Script path and name
 SCRIPTNAME=$(basename -s .sh "$0")
 SCRIPTPATH=$( cd "$(dirname '${BASH_SOURCE[0]}')" ; pwd -P )
 
+## OS Detection
+[[ "$OSTYPE" == "darwin"* ]] && _date="gdate"
+
 if [ -f "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
    TRAKT_TOKEN=$(awk -v FS='(access_token\":\"|\",\"token_type)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data")
    TRAKT_RTOKEN=$(awk -v FS='(refresh_token\":\"|\",\"scope)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data")
-   creatDATE=$(date -d @$(awk -v FS='(created_at\":|}$)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data") -R) # Need to convert before calculate!
-   expDATE=$(date -d "$creatDATE +90 days" +%s)
+   creatDATE=$(${_date:-date} -d @$(awk -v FS='(created_at\":|}$)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data") -R) # Need to convert before calculate!
+   expDATE=$(${_date:-date} -d "$creatDATE +90 days" +%s)
 fi
 
 ## Find file and source it
@@ -277,7 +280,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ -n "$MEDIA" ] ; then
 
-    if [ $expDATE -le $(date +%s) ]; then
+    if [[ "$expDATE" -le $(${_date:-date} +%s) ]]; then
       if [ -w "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
         refreshToken
         eval $TRAKT_TOKEN
