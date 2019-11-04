@@ -13,10 +13,12 @@
 ## Table of Contents
 
 * [Description](#description)
-* [Installation](#installation)
-   * [Script Setup](#script-setup)
-   * [Tautulli](#tautulli)
-   * [Script Settings](#script-settings)
+* [Getting Started](#getting-started)
+   * [Prerequisites](#prerequisites)
+   * [Installation](#installation)
+     * [Script Setup](#script-setup)
+     * [Tautulli](#tautulli)
+     * [Script Settings](#script-settings)
 * [Usage](#usage)
 * [License](#license)
 * [Similar Projects](#similar-projects)
@@ -24,7 +26,11 @@
 ## Description: 
 Companion script for Tautulli to automatically scrobble media to Trakt.tv.
 
-## Installation 
+## Getting Started
+### Prerequisites
+macOS only  
+`brew install coreutils`
+### Installation 
     wget -O tautulli2trakt.sh https://raw.githubusercontent.com/Generator/tautulli2trakt/master/tautulli2trakt.sh
     chmod +x tautulli2trakt.sh
 
