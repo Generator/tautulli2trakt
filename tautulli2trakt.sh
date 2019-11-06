@@ -20,6 +20,16 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #  
 
+## OS Detection
+if [[ "$OSTYPE" == "darwin"* ]]; then
+   export PATH="/usr/local/bin:/usr/local/sbin:$PATH";
+   _date="gdate"
+   if [ ! -x $(command -v gdate) ]; then
+      echo "gdate not installed or not in PATH"
+      exit 1
+   fi
+fi
+
 ## App info
 APP_VER=1.1.2
 APP_DATE=$(date +%F)
@@ -27,9 +37,6 @@ APP_DATE=$(date +%F)
 ## Script path and name
 SCRIPTNAME=$(basename -s .sh "$0")
 SCRIPTPATH=$( cd "$(dirname '${BASH_SOURCE[0]}')" ; pwd -P )
-
-## OS Detection
-[[ "$OSTYPE" == "darwin"* ]] && _date="gdate"
 
 if [ -f "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
    TRAKT_TOKEN=$(awk -v FS='(access_token\":\"|\",\"token_type)' '{print $2}' "$SCRIPTPATH/$SCRIPTNAME.data")
