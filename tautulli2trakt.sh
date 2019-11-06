@@ -32,7 +32,7 @@ fi
 
 ## App info
 APP_VER=1.1.2
-APP_DATE=$(date +%F)
+APP_DATE=$(${_date:-date} +%F)
 
 ## Script path and name
 SCRIPTNAME=$(basename -s .sh "$0")
