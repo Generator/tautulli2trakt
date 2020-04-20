@@ -290,7 +290,7 @@ if [ -n "$MEDIA" ] ; then
     if [[ "$expDATE" -le $(${_date:-date} +%s) ]]; then
       if [ -w "$SCRIPTPATH/$SCRIPTNAME.data" ]; then
         refreshToken
-        eval TRAKT_TOKEN=$TRAKT_TOKEN
+        TRAKT_TOKEN=$TRAKT_TOKEN
       else
         echo "Error: Unable to write on $SCRIPTNAME.data"
         exit 1
